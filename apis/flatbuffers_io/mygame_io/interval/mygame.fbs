@@ -1,0 +1,30 @@
+// example IDL file
+
+namespace MyGame;
+
+attribute "priority";
+
+enum Color : byte { Red = 1, Green, Blue }
+
+union Any { Monster }
+
+struct Vec3 {
+  x:float;
+  y:float;
+  z:float;
+}
+
+// Table 是在 FlatBuffers 中定义对象的主要方式，由一个名称（这里是 Monster）和一个字段列表组成.
+// 每个字段都有一个名称，一个类型和一个可选的默认值（如果省略，它默认为 0 / NULL）。
+table Monster {
+  pos:Vec3;
+  mana:short = 150;
+  hp:short = 100;
+  name:string;
+  friendly:bool = false (deprecated, priority: 1);
+  inventory:[ubyte];
+  color:Color = Blue;
+  test:Any;
+}
+
+root_type Monster;
