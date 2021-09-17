@@ -3,6 +3,10 @@ syntax = "proto3";
 package deviceid;
 option go_package = "github.com/crawler-007/core/apis/proto_io/deviceid_io";
 
+message DeviceIdCollector {
+  string device_ids = 1; // DeviceId pb
+}
+
 message DeviceId {
   string gaid = 1;
   string gaid_md5 = 2;
