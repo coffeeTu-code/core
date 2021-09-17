@@ -20,3 +20,7 @@ flatc --version
 # flatc version 2.0.0
 
 ```
+
+# 一些文章
+
+[深入浅出 FlatBuffers 之 Schema ++++++++++++ 一缕殇流化隐半边冰霜](https://halfrost.com/flatbuffers_schema/#toc-14)

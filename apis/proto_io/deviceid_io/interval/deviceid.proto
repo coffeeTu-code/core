@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package deviceid;
+option go_package = "github.com/crawler-007/core/apis/proto_io/deviceid_io";
+
+message DeviceId {
+  string gaid = 1;
+  string gaid_md5 = 2;
+  string gaid_sha1 = 3;
+  string idfa = 4;
+  string idfa_md5 = 5;
+  string idfa_sha1 = 6;
+  string imei = 7;
+  string imei_md5 = 8;
+  string imei_sha1 = 9;
+  string androidid = 10;
+  string androidid_md5 = 11;
+  string androidid_sha1 = 12;
+  string mac_md5 = 14;
+  string mac_sha1 = 15;
+  string oaid = 16;
+  string oaid_md5 = 17;
+  string idfv = 19;
+  string ip = 22;
+  string ua = 23;
+  string ipua_md5 = 24;
+  string caid_gx = 31; // caid gx 广协版
+  string caid_ry = 32; // caid ry 热云版
+
+  enum DeviceIdType {
+    t_none = 0;
+    t_gaid = 1;
+    t_gaid_md5 = 2;
+    t_gaid_sha1 = 3;
+    t_idfa = 4;
+    t_idfa_md5 = 5;
+    t_idfa_sha1 = 6;
+    t_imei = 7;
+    t_imei_md5 = 8;
+    t_imei_sha1 = 9;
+    t_androidid = 10;
+    t_androidid_md5 = 11;
+    t_androidid_sha1 = 12;
+    t_mac_md5 = 14;
+    t_mac_sha1 = 15;
+    t_oaid = 16;
+    t_oaid_md5 = 17;
+    t_idfv = 19;
+    t_ip = 22;
+    t_ua = 23;
+    t_ipua_md5 = 24;
+    t_caid_gx = 31; // caid gx 广协版
+    t_caid_ry = 32; // caid ry 热云版
+  }
+}
+
+
