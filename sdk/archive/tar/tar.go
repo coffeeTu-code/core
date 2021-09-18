@@ -4,6 +4,9 @@ import (
 	"archive/tar"
 	"bytes"
 	"io"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 )
 
 type ArchiveTar struct {
@@ -22,9 +25,24 @@ func (a *ArchiveTar) Read(buf *bytes.Buffer) (err error) {
 	r := bytes.NewReader(buf.Bytes())
 	tr := tar.NewReader(r)
 
+	return a.reader(tr)
+}
+
+func (a *ArchiveTar) ReadFile(file string) (err error) {
+	bys, err := readFile(file)
+	if err != nil {
+		return err
+	}
+	r := bytes.NewReader(bys)
+	tr := tar.NewReader(r)
+
+	return a.reader(tr)
+}
+
+func (a *ArchiveTar) reader(reader *tar.Reader) error {
 	// 迭代档案中的文件。
 	for {
-		hdr, err := tr.Next()
+		hdr, err := reader.Next()
 		if err == io.EOF {
 			// tar归档结束
 			break
@@ -35,7 +53,7 @@ func (a *ArchiveTar) Read(buf *bytes.Buffer) (err error) {
 
 		bys := new(bytes.Buffer)
 
-		_, err = io.Copy(bys, tr)
+		_, err = io.Copy(bys, reader)
 		if err != nil {
 			return err
 		}
@@ -45,11 +63,8 @@ func (a *ArchiveTar) Read(buf *bytes.Buffer) (err error) {
 			Body []byte
 		}{Name: hdr.Name, Body: bys.Bytes()})
 	}
-	return
-}
 
-func (a *ArchiveTar) ReadFile() {
-
+	return nil
 }
 
 func (a *ArchiveTar) Write() (buf *bytes.Buffer, err error) {
@@ -79,6 +94,30 @@ func (a *ArchiveTar) Write() (buf *bytes.Buffer, err error) {
 	return
 }
 
-func (a *ArchiveTar) WriteFile() {
+func (a *ArchiveTar) WriteFile(file string) error {
+	buf, err := a.Write()
+	if err != nil {
+		return err
+	}
 
+	return writeFile(file, buf.Bytes())
+}
+
+func readFile(file string) (bys []byte, err error) {
+	return ioutil.ReadFile(file)
+}
+
+func writeFile(file string, bys []byte) error {
+	if err := mkdir(file); err != nil {
+		return err
+	}
+	return ioutil.WriteFile(file, bys, 0600)
+}
+
+func mkdir(path string) error {
+	dir, _ := filepath.Split(path)
+	if len(dir) > 0 {
+		return os.MkdirAll(dir, os.ModePerm)
+	}
+	return nil
 }
