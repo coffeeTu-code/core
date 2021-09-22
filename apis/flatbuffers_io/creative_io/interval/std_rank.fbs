@@ -1,0 +1,217 @@
+// generated from stdrank.proto
+namespace stdrank;
+
+table rsrequest {
+  timeout:int;
+  requestid:string;
+  dateinfo:stdrank.dateinfo;
+  traffic:stdrank.traffic;
+  dev:stdrank.device;
+  polarisresponse:stdrank.polarisresponse;
+}
+
+table device {
+  devicetype:int;
+  brand:string;
+  model:string;
+  os:string;
+  osv:string;
+  majorosv:string;
+  language:string;
+  networktype:string;
+  carrier:string;
+  screensize:string;
+  audienceids:[string];
+  deviceip:string;
+  keywords:[string];
+  age:int;
+  gender:string;
+  dominantdevtype:int;
+  ua:string;
+}
+
+table traffic {
+  adx:string;
+  adtype:string;
+  publisher:string;
+  publishid:string;
+  bundle:string;
+  appid:string;
+  placementid:string;
+  unitid:string;
+  size:string;
+  companionsize:string;
+  orientation:string;
+  traffictype:string;
+  appcontentcategory:[string];
+  appkeywords:[string];
+  country:string;
+  city:string;
+  sdkversion:string;
+  bidfloor:float;
+  ispreaudit:bool;
+  appversion:string;
+  requesttype:string;
+}
+
+table dateinfo {
+  hour:string;
+  whatday:string;
+  remainholidays:string;
+}
+
+table polarisresponse {
+  status:int;
+  time:int;
+  big_template_list:[stdrank.bigtemplate];
+  slot_list:[stdrank.slotobj];
+}
+
+table bigtemplate {
+  big_template_id:int;
+  slot_list:[stdrank.slotreference];
+}
+
+table slotreference {
+  slot_index:int;
+  slot_id:int;
+  required:bool;
+}
+
+table slotobj {
+  slot_id:int;
+  campaign_template_list:[stdrank.campaigntemplate];
+}
+
+table campaigntemplate {
+  campaign_id:long;
+  template_group_list:[stdrank.templatetypegroupinstance];
+  template_list:[stdrank.templateobj];
+  creative_list:[stdrank.creativeattr];
+  ext:stdrank.respcampaignext;
+}
+
+table respcampaignext {
+}
+
+table templatetypegroupinstance {
+  template_group:int;
+  template_id_tuple:[int];
+  trynew_group:bool;
+}
+
+table templateobj {
+  template_id:int;
+  template_type:int;
+  component_type:int;
+  api_framework:int;
+  order:int;
+  orientation:int;
+  template_screen_size:int;
+  click_area:[int];
+  element_list:[stdrank.templateelement];
+  creative_spec:string;
+  group_creative_list:[stdrank.groupcreative];
+  template_feature_ids:[string];
+}
+
+table templateelement {
+  element_name:string;
+  creative_id_list:[stdrank.elementcreative];
+}
+
+table groupcreative {
+  group_id:string;
+  creative_id_list:[stdrank.elementcreative];
+}
+
+table elementcreative {
+  creative_type:long;
+  creative_id:long;
+  doc_id:string;
+  adn_creative_id:long;
+  format_type:int;
+  trynew_creative:bool;
+}
+
+table creativeattr {
+  creative_id:long;
+  sub_creative_id:long;
+  resolution:string;
+  video_resolution:string;
+  video_length:string;
+  width:int;
+  height:int;
+  bitrate:int;
+  video_size:string;
+  orientation:int;
+  minos:long;
+  platform:int;
+  fmd5:string;
+  source:int;
+  ctime:long;
+  utime:long;
+  cp_id:long;
+  dco_part_list:[stdrank.dcopart];
+  creative_package_type:int;
+  adv_creative_group_id:long;
+  abtest_tuple_id:long;
+  uniq_cid:long;
+  adv_creative_id:string;
+  whdcoid:long;
+  dimenssiontype:int;
+  url:string;
+  app_tag:string;
+  mime:string;
+  creative_type:long;
+  clarity:int;
+  tagcode:string;
+  value:string;
+}
+
+table dcopart {
+  part_id:long;
+  res_id_list:[long];
+}
+
+table campaigninfo {
+  slotindex:int;
+  slotid:int;
+  campaignid:long;
+  templategroupid:int;
+  templateresult:[stdrank.templateresult];
+  predictedactionrate:float;
+  predictedecpm:float;
+  bidfactor:float;
+  subalgorithm:string;
+}
+
+table templateresult {
+  templateid:int;
+  groupid:string;
+  templatedetail:[stdrank.templatedetail];
+  templatetype:int;
+  componenttype:int;
+  order:int;
+  apiframework:int;
+}
+
+table templatedetail {
+  ele:string;
+  crid:long;
+}
+
+table rsresponse {
+  status:int;
+  msg:string;
+  bigtemplateid:long;
+  bidresult:[stdrank.campaigninfo];
+  algorithm:string;
+  extalgo:string;
+  predictedecpm:float;
+}
+
+
+rpc_service ranker {
+  predict(rsrequest):rsresponse;
+}

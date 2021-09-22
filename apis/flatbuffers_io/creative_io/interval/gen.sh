@@ -16,4 +16,4 @@ function gen() {
 #  flatc -o $dir/ --rust $1 && rsync -a $dir ../ && rm -r $dir
 }
 
-gen creative.fbs
+gen std_rank.fbs
