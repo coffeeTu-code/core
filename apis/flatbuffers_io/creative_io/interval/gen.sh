@@ -16,4 +16,6 @@ function gen() {
 #  flatc -o $dir/ --rust $1 && rsync -a $dir ../ && rm -r $dir
 }
 
-gen std_rank.fbs
+# cat std_rank.proto| tr 'A-Z' 'a-z'
+flatc -I . --proto std_rank.proto && gen std_rank.fbs
+

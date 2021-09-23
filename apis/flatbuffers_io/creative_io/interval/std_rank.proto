@@ -1,0 +1,162 @@
+//juno structure
+syntax = "proto3";
+
+package std_rank;
+option go_package = "gitlab.mobvista.com/voyager/protocols/gen/rs";
+
+//rankerrequest
+message RsRequest {
+  int32 timeout = 1;  //上游为算法设置的超时时间, 毫秒
+  string requestid = 2;
+  Traffic traffic = 4;
+  Device dev = 5;
+  repeated Campaign campaigndetaillist = 6; //存放campaign信息
+  repeated BigTemplate bigtemplatelist = 7;
+  repeated Slotobj slotlist = 8;
+}
+
+// 设备/用户相关信息
+message Device {
+  int32  devicetype = 1;
+  string brand = 2;
+  string model = 3;
+  string os = 4;
+  string osv = 5;
+  string majorosv = 6;
+  string language = 7;
+  string networktype = 8;
+  string carrier = 9;
+  string screensize = 10;
+  repeated string audienceids = 11;
+  string deviceip = 12;
+  repeated string keywords = 13;
+  int32 age = 14;
+  string gender = 15;
+  int32 dominantdevtype = 16;
+  string ua = 17;
+};
+
+//流量相关信息
+message Traffic {
+  string  adx = 1;
+  string adtype = 2;
+  string publisher = 3;
+  string publishid = 4;
+  string packagenmae = 5;
+  string appid = 6;
+  string placementid = 7;
+  string unitid = 8;
+  string size = 9;
+  string companionsize = 10;
+  string orientation = 11;
+  string traffictype = 12;
+  repeated string appcontentcategory = 13;
+  repeated string appkeywords = 14;
+  string country = 15;
+  string city = 16;
+  string sdkversion = 17;
+  float bidfloor = 18;
+  bool ispreaudit = 19; //是否前置送审流量，用来决定是用groupid选素材还是模板素材体系
+  string appversion = 20; //流量所属app的版本
+  string requesttype = 21; //api、sdk、adx等
+};
+
+//大模板
+message BigTemplate {
+  int64 bigtemplateid = 1;         //大模板id
+  repeated SlotReference slotlist = 2;       //slotid，slot具体信息可以从slotlist中查找
+}
+
+message SlotReference {
+  int32 slot_index = 1;
+  int32 slot_id = 2;
+}
+
+//单个slot信息
+message Slotobj {
+  repeated CampaignTemplate campaigntemplates = 1; //候选campaign
+  int32 slotid = 2;
+}
+
+message CampaignTemplate {
+  int64 campaignid = 1;
+  repeated TemplateGroup templategrouplist = 2;    //模板组合
+  repeated Templateobj templatelist = 3;           //模板集合
+}
+
+message TemplateGroup {
+  int32 templategroupid = 1;                       //模板组id
+  repeated int32 templateidtuple = 2;              //模板组合所包含的模板集合
+  bool trynewgroup = 3;                            //模版组合试新
+}
+
+message Templateobj {
+  int32 templateid = 1;
+  string creativespec = 2; // 国内 审核adx 广告位id
+  int32 templatetype = 3;
+  int32 componenttype = 4;
+  repeated GroupCreative groupcreativelist = 5;    //存放候选"送审素材组"集合，非送审流量无该信息
+  repeated TemplateElement elementlist = 6;        //模板元素候选集合，送审流量无该信息
+}
+
+message TemplateElement {
+  string elementname = 1;                        //模板下element
+  repeated CreativeIndex creativelist = 2;       //element中候选的creative
+}
+
+message GroupCreative {
+  string groupid = 1;                              //送审组id
+  repeated CreativeIndex creativelist = 2;         //送审组送审时使用的素材集合
+}
+
+message CreativeIndex {
+  int64 creativeid = 1; // adn creative id
+  string mgodocid = 2; // 素材索引，通过该 id 绑定 mongo 记录
+  bool trynewcreative = 3; // 素材试新标记
+}
+
+message Campaign {
+  int64 campaignid = 1;
+  int64 advertiserid = 2;
+  string packagename = 3;
+  enum costtypeenum
+  {
+    unknown = 0;
+    cpi = 1;
+    cpc = 2;
+    cpm = 3;
+    cpa = 4;
+    cpe = 5;
+  }
+  costtypeenum costtype = 4;
+}
+
+message RsResponse {
+  int32 statuscode = 1;                         //算法返回状态码，0表示成功
+  string statusmsg = 2;                         //算法返回状态信息，分析调试使用
+  int64 bigtemplateid = 3;                      //最终选择的大模板id
+  repeated BidCampaign bidresult = 4;           //最终选择的
+  string algorithm = 5;                         //
+  string subalgorithm = 6;
+  float bidprice = 7;                           //出价
+  string extalgo = 8;                           //扩展信息，会落日志。算法可传任意字符串落日志。
+}
+
+message BidCampaign {
+  int32 slotindex = 1;                          // campaign在大模板中slot顺序
+  int32 slotid = 2;                             // slotid campaign对应slotid
+  int64 campaignid = 3;                         // campaignid
+  int32 templategroupid = 4;                    // 模版组合id
+  repeated TemplateResult templateresult = 5;   // 选择的模板素材
+}
+
+message TemplateResult {
+  int32 templateid = 1;                         //模板id
+  string groupid = 2;                           //对于送审流量，选则最好的groupid
+  repeated TemplateElementResult elementlistresult = 3;  //非送审流量，选则最好的模板元素
+}
+
+message TemplateElementResult {
+  string elementname = 1;  //creative element
+  int64 creativeid = 2;    //creative element下优选出的creativeid
+}
